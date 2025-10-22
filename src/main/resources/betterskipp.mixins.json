@@ -4,7 +4,6 @@
   "package": "com.betterskipp.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "client.MerchantScreenHandlerAccessor",
     "accessor.VillagerEntityInvoker",
     "accessor.MerchantScreenHandlerAccessor"
   ],
