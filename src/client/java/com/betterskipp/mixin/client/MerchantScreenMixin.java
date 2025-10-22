@@ -44,7 +44,7 @@ public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHa
 
             // Adicionar botão APENAS se canRefresh for TRUE
             if (canRefresh) {
-                int buttonX = this.x + 91;
+                int buttonX = this.x + 76;
                 int buttonY = this.y + 5;
 
                 this.refreshButton = ButtonWidget.builder(

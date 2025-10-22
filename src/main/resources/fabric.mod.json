@@ -3,9 +3,9 @@
   "id": "betterskipp",
   "version": "1.0.0",
   "name": "BetterSkipp",
-  "description": "Atualiza trocas de villagers sem quebrar a bancada",
-  "authors": ["Seu Nome"],
-  "contact": {},
+  "description": "Refresh villager trades without closing the trading screen",
+  "authors": ["Vinicius Fachini"],
+  "contact": {"sources": "https://github.com/VinniFachini/BetterSkipp"},
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
@@ -16,6 +16,7 @@
       "com.betterskipp.client.BetterSkippClient"
     ]
   },
+  "icon": "assets/betterskipp/icon.png",
   "mixins": [
     "betterskipp.mixins.json",
     "betterskipp.client.mixins.json"
