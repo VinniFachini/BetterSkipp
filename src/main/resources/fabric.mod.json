@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "betterskipp",
+  "version": "1.0.0",
+  "name": "BetterSkipp",
+  "description": "Atualiza trocas de villagers sem quebrar a bancada",
+  "authors": ["Seu Nome"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.betterskipp.BetterSkipp"
+    ],
+    "client": [
+      "com.betterskipp.client.BetterSkippClient"
+    ]
+  },
+  "mixins": [
+    "betterskipp.mixins.json",
+    "betterskipp.client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21.10",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

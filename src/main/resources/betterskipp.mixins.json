@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.betterskipp.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "client.MerchantScreenHandlerAccessor",
+    "accessor.VillagerEntityInvoker",
+    "accessor.MerchantScreenHandlerAccessor"
+  ],
+  "client": [
+    "client.MerchantScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
