@@ -1,8 +1,11 @@
 package com.betterskipp.client;
 
 import com.betterskipp.network.RefreshPermissionResponsePayload;
+import com.betterskipp.network.RefreshSuccessPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.screen.MerchantScreenHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,31 +18,36 @@ public class BetterSkippClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        LOGGER.info("BetterSkipp Client inicializando...");
+        LOGGER.info("BetterSkipp Client inicializado!");
 
-        // Registrar handler para receber resposta do servidor
-        ClientPlayNetworking.registerGlobalReceiver(RefreshPermissionResponsePayload.ID, (payload, context) -> {
-            context.client().execute(() -> {
-                LOGGER.info("📥 Pacote recebido do servidor: canRefresh = {}", payload.canRefresh());
-
-                if (responseCallback != null) {
-                    LOGGER.info("✅ Callback existe, executando...");
-                    responseCallback.accept(payload.canRefresh());
-                } else {
-                    LOGGER.warn("⚠️ Callback é NULL - resposta ignorada!");
+        ClientPlayNetworking.registerGlobalReceiver(
+                RefreshPermissionResponsePayload.ID,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        if (responseCallback != null) {
+                            responseCallback.accept(payload.canRefresh());
+                        } else {
+                            LOGGER.warn("Resposta de permissão recebida mas nenhum callback registrado");
+                        }
+                    });
                 }
-            });
-        });
+        );
 
-        LOGGER.info("BetterSkipp Client inicializado com sucesso!");
+        // Receber as novas ofertas e atualizar a tela sem fechar
+        ClientPlayNetworking.registerGlobalReceiver(
+                RefreshSuccessPayload.ID,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        MinecraftClient client = context.client();
+                        if (client.player != null && client.player.currentScreenHandler instanceof MerchantScreenHandler handler) {
+                            handler.setOffers(payload.offers());
+                        }
+                    });
+                }
+        );
     }
 
     public static void setResponseCallback(Consumer<Boolean> callback) {
-        if (callback != null) {
-            LOGGER.info("🔧 Callback registrado");
-        } else {
-            LOGGER.info("🔧 Callback removido");
-        }
         responseCallback = callback;
     }
 }

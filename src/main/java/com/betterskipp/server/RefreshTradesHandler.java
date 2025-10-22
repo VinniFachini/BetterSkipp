@@ -4,8 +4,8 @@ import com.betterskipp.mixin.accessor.MerchantScreenHandlerAccessor;
 import com.betterskipp.mixin.accessor.VillagerEntityInvoker;
 import com.betterskipp.network.CheckRefreshPermissionPayload;
 import com.betterskipp.network.RefreshPermissionResponsePayload;
+import com.betterskipp.network.RefreshSuccessPayload;
 import com.betterskipp.network.RefreshTradesPayload;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.screen.MerchantScreenHandler;
@@ -20,9 +20,7 @@ public class RefreshTradesHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("BetterSkipp");
 
     public static void register() {
-        PayloadTypeRegistry.playC2S().register(RefreshTradesPayload.ID, RefreshTradesPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(CheckRefreshPermissionPayload.ID, CheckRefreshPermissionPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(RefreshPermissionResponsePayload.ID, RefreshPermissionResponsePayload.CODEC);
+        // Remove PayloadTypeRegistry calls - they're now in BetterSkipp.onInitialize()
 
         ServerPlayNetworking.registerGlobalReceiver(CheckRefreshPermissionPayload.ID, (payload, context) -> {
             context.server().execute(() -> {
@@ -148,6 +146,8 @@ public class RefreshTradesHandler {
         // Limpar e gerar novas ofertas
         offers.clear();
         ((VillagerEntityInvoker) villager).invokeFillRecipes();
-        villager.sendOffers(player, villager.getDisplayName(), villager.getVillagerData().level());
+
+        // Send the new offers to the client
+        ServerPlayNetworking.send(player, new RefreshSuccessPayload(villager.getOffers()));
     }
 }
